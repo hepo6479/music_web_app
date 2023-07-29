@@ -127,7 +127,7 @@ class MusicTransformer(nn.Module):
 
         print("Generating sequence of max length:", target_seq_length)
         st.write("Generating sequence of max length:", target_seq_length)
-
+        my_bar = st.progress(0)
         gen_seq = torch.full((1,target_seq_length), TOKEN_PAD, dtype=TORCH_LABEL_TYPE, device=get_device())
 
         num_primer = len(primer)
@@ -172,7 +172,9 @@ class MusicTransformer(nn.Module):
             cur_i += 1
             if(cur_i % 50 == 0):
                 print(cur_i, "/", target_seq_length)
-                st.write(cur_i, "/", target_seq_length)
+                # st.write(cur_i, "/", target_seq_length)
+            progress_text = f"Operation in progress. Please wait.  ({cur_i} / {target_seq_length})"
+            my_bar.progress(cur_i / target_seq_length, text=progress_text)
 
         return gen_seq[:, :cur_i]
 
